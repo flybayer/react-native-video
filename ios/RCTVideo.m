@@ -61,7 +61,7 @@ static NSString *const timedMetadata = @"timedMetadata";
     _pendingSeek = false;
     _pendingSeekTime = 0.0f;
     _lastSeekTime = 0.0f;
-    _progressUpdateInterval = 250;
+    _progressUpdateInterval = 16;
     _controls = NO;
     _playerBufferEmpty = YES;
     _playInBackground = false;
@@ -118,7 +118,7 @@ static NSString *const timedMetadata = @"timedMetadata";
     {
         return [playerItem seekableTimeRanges].firstObject.CMTimeRangeValue;
     }
-    
+
     return (kCMTimeRangeZero);
 }
 
@@ -325,23 +325,23 @@ static NSString *const timedMetadata = @"timedMetadata";
     if ([keyPath isEqualToString: timedMetadata])
     {
 
-        
+
         NSArray<AVMetadataItem *> *items = [change objectForKey:@"new"];
         if (items && ![items isEqual:[NSNull null]] && items.count > 0) {
-            
+
             NSMutableArray *array = [NSMutableArray new];
             for (AVMetadataItem *item in items) {
-                
+
                 NSString *value = item.value;
                 NSString *identifier = item.identifier;
-                
+
                 if (![value isEqual: [NSNull null]]) {
                     NSDictionary *dictionary = [[NSDictionary alloc] initWithObjects:@[value, identifier] forKeys:@[@"value", @"identifier"]];
-                    
+
                     [array addObject:dictionary];
                 }
             }
-            
+
             self.onTimedMetadata(@{
                                    @"target": self.reactTag,
                                    @"metadata": array
@@ -376,7 +376,7 @@ static NSString *const timedMetadata = @"timedMetadata";
           } else
             orientation = @"portrait";
         }
-          
+
       if(self.onVideoLoad) {
           self.onVideoLoad(@{@"duration": [NSNumber numberWithFloat:duration],
                              @"currentTime": [NSNumber numberWithFloat:CMTimeGetSeconds(_playerItem.currentTime)],
